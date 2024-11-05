@@ -54,8 +54,14 @@ jobs:
           string: ${{ github.event.client_payload.path }}
           replace-with: ''
       - name: Purge CDN
+        id: purgecdn
         uses: fjogeleit/http-request-action@v1
         with:
           url: ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com',  steps.format.outputs.replaced) }}
           method: 'POST'
           customHeaders: '{"Content-Type": "application/json", "Fastly-Key": "${{ secrets.FASTLY_API_KEY }}", "Accept": "application/json"}'
+      - name: Show Response
+        run: |
+          echo ${{ steps.purgecdn.outputs.response }}
+          echo ${{ steps.purgecdn.outputs.headers }}
+          echo ${{ steps.purgecdn.outputs.status }}
