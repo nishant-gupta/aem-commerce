@@ -7,16 +7,10 @@ jobs:
   print:
     runs-on: ubuntu-latest
     steps:
-      - name: Format path
-        id: format
-        uses: frabert/replace-string-action@v2
-        with:
-          pattern: '\.md'
-          string: ${{ github.event.client_payload.path }}
-          replace-with: ''
       - run: |
         echo "Status: ${{ github.event.client_payload.status }}"
         echo "Payload: ${{ toJson(github.event.client_payload) }}"
+        echo "https://api.fastly.com/purge/hmqa-dev.factory.alshayauat.com${{ github.event.client_payload.path }}"
   slack:
     runs-on: ubuntu-latest
     steps:
