@@ -7,42 +7,49 @@ jobs:
   print:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-        echo "Status: ${{ github.event.client_payload.status }}"
-        echo "Payload: ${{ toJson(github.event.client_payload) }}"
-        echo "https://api.fastly.com/purge/hmqa-dev.factory.alshayauat.com${{ github.event.client_payload.path }}"
+    - name: Format path
+      id: format
+      uses: frabert/replace-string-action@v2
+      with:
+        pattern: '\.md'
+        string: ${{ github.event.client_payload.path }}
+        replace-with: ''
+    - run: |
+      echo "Status: ${{ github.event.client_payload.status }}"
+      echo "Payload: ${{ toJson(github.event.client_payload) }}"
+      echo "${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com',  github.event.client_payload.path) }}
   slack:
     runs-on: ubuntu-latest
     steps:
-      - name: Format path
-        id: format
-        uses: frabert/replace-string-action@v2
-        with:
-          pattern: '\.md'
-          string: ${{ github.event.client_payload.path }}
-          replace-with: ''
-      - name: Notify Slack (JSON)
-        if: ${{ endsWith(github.event.client_payload.path, '.json') }}
-        uses: slackapi/slack-github-action@v1.23.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          # For posting a rich message using Block Kit
-          payload: |
-            {
-              "text": "Just published: `${{ github.event.client_payload.path }}`"
-            }
-      - name: Notify Slack (Markdown)
-        if: ${{ endsWith(github.event.client_payload.path, '.md') }}
-        uses: slackapi/slack-github-action@v1.23.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          # For posting a rich message using Block Kit
-          payload: |
-            {
-              "text": "Just published: https://www.aem.live${{ steps.format.outputs.replaced }}, Status: ${{ github.event.client_payload.status }}, ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com', steps.format.outputs.replaced) }}"
-            }
+    - name: Format path
+      id: format
+      uses: frabert/replace-string-action@v2
+      with:
+        pattern: '\.md'
+        string: ${{ github.event.client_payload.path }}
+        replace-with: ''
+    - name: Notify Slack (JSON)
+      if: ${{ endsWith(github.event.client_payload.path, '.json') }}
+      uses: slackapi/slack-github-action@v1.23.0
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      with:
+        # For posting a rich message using Block Kit
+        payload: |
+          {
+            "text": "Just published: `${{ github.event.client_payload.path }}`"
+          }
+    - name: Notify Slack (Markdown)
+      if: ${{ endsWith(github.event.client_payload.path, '.md') }}
+      uses: slackapi/slack-github-action@v1.23.0
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      with:
+        # For posting a rich message using Block Kit
+        payload: |
+          {
+            "text": "Just published: https://www.aem.live${{ steps.format.outputs.replaced }}, Status: ${{ github.event.client_payload.status }}, ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com', steps.format.outputs.replaced) }}"
+          }
   cdn-purge:
     runs-on: ubuntu-latest
     steps:
