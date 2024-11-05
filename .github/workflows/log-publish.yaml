@@ -11,6 +11,7 @@ jobs:
         echo "Status: ${{ github.event.client_payload.status }}"
         echo "Payload: ${{ toJson(github.event.client_payload) }}"
         echo ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com',  github.event.client_payload.path)}}
+        echo ${{ env.CDN_PURGE_SITES}}
   slack:
     runs-on: ubuntu-latest
     steps:
@@ -44,7 +45,7 @@ jobs:
               "text": "Just published: https://www.aem.live${{ steps.format.outputs.replaced }}, Status: ${{ github.event.client_payload.status }}, ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com', steps.format.outputs.replaced) }}"
             }
   cdn-purge:
-    if: ${{ contains(fromJSON(vars.CDN_PURGE_SITES), github.event.client_payload.site) }}
+    if: ${{ contains(fromJSON(env.CDN_PURGE_SITES), github.event.client_payload.site) }}
     runs-on: ubuntu-latest
     steps:
       - name: Format path
