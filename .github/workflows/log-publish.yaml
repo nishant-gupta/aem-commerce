@@ -13,7 +13,7 @@ jobs:
         echo ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com',  github.event.client_payload.path)}}
         echo ${{ vars.CDN_PURGE_SITES}}
         echo ${{ toJson(vars.CDN_DOMAINS) }}
-        echo ${{ vars.CDN_DOMAINS['aem-commerce']}}
+        echo ${{ vars.CDN_DOMAINS.aem-commerce}}
   slack:
     runs-on: ubuntu-latest
     steps:
