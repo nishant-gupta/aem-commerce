@@ -9,7 +9,7 @@ jobs:
     steps:
     - run: |
         echo "Status: ${{ github.event.client_payload.status }}"
-        echo "Payload: ${{ github.event.client_payload }}"
+        echo "Payload: ${{ toJson(github.event.client_payload) }}"
   slack:
     runs-on: ubuntu-latest
     steps:
@@ -42,3 +42,12 @@ jobs:
             {
               "text": "Just published: https://www.aem.live${{ steps.format.outputs.replaced }}, Status: ${{ github.event.client_payload.status }}, Payload: ${{ github.event.client_payload.live }}"
             }
+  cdn-purge:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Purge CDN
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: https://api.fastly.com/purge/hmqa-dev.factory.alshayauat.com/{{ steps.format.outputs.replaced }}
+        method: 'POST'
+        customHeaders: '{"Content-Type": "application/json", "Fastly-Key": "${{ secrets.FASTLY_API_KEY }}", "Accept": "application/json"}'
