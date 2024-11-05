@@ -32,7 +32,7 @@ jobs:
           # For posting a rich message using Block Kit
           payload: |
             {
-              "text": "Just published: `${{ github.event.client_payload.path }}`"
+              "text": "Just published: `${{ github.event.client_payload.path }} , ${{ vars.CDN_DOMAINS }}, ${{ vars.CDN_DOMAINS_ALL }}`"
             }
       - name: Notify Slack (Markdown)
         if: ${{ endsWith(github.event.client_payload.path, '.md') }}
@@ -69,7 +69,7 @@ jobs:
           echo ${{ steps.purgecdnmd.outputs.headers }}
           echo ${{ steps.purgecdnmd.outputs.status }}
   cdn-purgejson:
-    if: ${{ contains(vars.CDN_PURGE_SITES, github.event.client_payload.site) && endsWith(github.event.client_payload.path, 'placeholders.json') && endsWith(github.event.client_payload.site, 'global') }}
+    if: ${{ contains(vars.CDN_PURGE_SITES, github.event.client_payload.site) && endsWith(github.event.client_payload.path, 'placeholders.json') && endsWith(github.event.client_payload.site, 'commerce') }}
     runs-on: ubuntu-latest
     strategy:
         matrix:
