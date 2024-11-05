@@ -46,9 +46,16 @@ jobs:
   cdn-purge:
     runs-on: ubuntu-latest
     steps:
-    - name: Purge CDN
-      uses: fjogeleit/http-request-action@v1
-      with:
-        url: ${{ format('https://api.fastly.com/purge/{0}/{1}', 'hmqa-dev.factory.alshayauat.com',  steps.format.outputs.replaced) }}
-        method: 'POST'
-        customHeaders: '{"Content-Type": "application/json", "Fastly-Key": "${{ secrets.FASTLY_API_KEY }}", "Accept": "application/json"}'
+      - name: Format path
+        id: format
+        uses: frabert/replace-string-action@v2
+        with:
+          pattern: '\.md'
+          string: ${{ github.event.client_payload.path }}
+          replace-with: ''
+      - name: Purge CDN
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: ${{ format('https://api.fastly.com/purge/{0}/{1}', 'hmqa-dev.factory.alshayauat.com',  steps.format.outputs.replaced) }}
+          method: 'POST'
+          customHeaders: '{"Content-Type": "application/json", "Fastly-Key": "${{ secrets.FASTLY_API_KEY }}", "Accept": "application/json"}'
