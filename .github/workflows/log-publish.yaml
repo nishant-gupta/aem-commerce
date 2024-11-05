@@ -20,7 +20,8 @@ jobs:
         echo ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com',  github.event.client_payload.path)}}
         echo ${{ vars.CDN_PURGE_SITES}}
         echo ${{ toJson(vars.CDN_DOMAINS) }}
-        echo ":: ${{ steps.sitekey.outputs.replaced }}>> ${{ vars.CDN_DOMAINS[steps.sitekey.outputs.replaced]}}::"
+        echo ":: ${{ steps.sitekey.outputs.replaced }}>> ${{ fromJSON(vars.CDN_DOMAINS)[steps.sitekey.outputs.replaced]}}::"
+        echo ":: ${{ github.event.client_payload.site }}>> ${{ fromJSON(vars.CDN_DOMAINS)[github.event.client_payload.site]}}::"
   slack:
     runs-on: ubuntu-latest
     steps:
