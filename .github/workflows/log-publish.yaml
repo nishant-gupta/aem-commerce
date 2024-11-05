@@ -89,7 +89,7 @@ jobs:
         id: purgecdnjson
         uses: fjogeleit/http-request-action@v1
         with:
-          url: ${{ format('https://api.fastly.com/purge/{0}{1}', fromJSON(vars.CDN_DOMAINS)[matrix.domain],  steps.format.outputs.replaced) }}
+          url: ${{ format('https://api.fastly.com/purge/{0}{1}', matrix.domain,  steps.format.outputs.replaced) }}
           method: 'POST'
           customHeaders: '{"Content-Type": "application/json", "Fastly-Key": "${{ secrets.FASTLY_API_KEY }}", "Accept": "application/json"}'
       - name: Show Response
