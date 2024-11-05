@@ -40,5 +40,5 @@ jobs:
           # For posting a rich message using Block Kit
           payload: |
             {
-              "text": "Just published: https://www.aem.live${{ steps.format.outputs.replaced }}, Status: ${{ github.event.client_payload.status }}, Payload: ${{ github.event.client_payload }}"
+              "text": "Just published: https://www.aem.live${{ steps.format.outputs.replaced }}, Status: ${{ github.event.client_payload.status }}, Payload: ${{ JSON.stringify(github.event.client_payload) }}"
             }
