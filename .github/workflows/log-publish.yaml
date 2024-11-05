@@ -7,13 +7,20 @@ jobs:
   print:
     runs-on: ubuntu-latest
     steps:
+    - name: Format Site key
+      id: sitekey
+      uses: frabert/replace-string-action@v2
+      with:
+        pattern: '-'
+        string: ${{ github.event.client_payload.site }}
+        replace-with: ''
     - run: |
         echo "Status: ${{ github.event.client_payload.status }}"
         echo "Payload: ${{ toJson(github.event.client_payload) }}"
         echo ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com',  github.event.client_payload.path)}}
         echo ${{ vars.CDN_PURGE_SITES}}
         echo ${{ toJson(vars.CDN_DOMAINS) }}
-        echo "::${{ fromJSON(vars.CDN_DOMAINS)['aemcommerce']}}::"
+        echo ":: ${{ steps.sitekey.outputs.replaced }}>> ${{ vars.CDN_DOMAINS[steps.sitekey.outputs.replaced]}}::"
   slack:
     runs-on: ubuntu-latest
     steps:
