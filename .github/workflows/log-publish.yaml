@@ -82,6 +82,9 @@ jobs:
           pattern: '\.md'
           string: ${{ github.event.client_payload.path }}
           replace-with: ''
+      - name: echo domain
+        run: |
+          echo "Domain: ${{ matrix.domain }}"
       - name: Purge CDN JSON
         id: purgecdnjson
         uses: fjogeleit/http-request-action@v1
