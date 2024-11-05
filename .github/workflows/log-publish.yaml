@@ -41,7 +41,7 @@ jobs:
           # For posting a rich message using Block Kit
           payload: |
             {
-              "text": "Just published: https://www.aem.live${{ steps.format.outputs.replaced }}, Status: ${{ github.event.client_payload.status }}, ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com', github.event.client_payload.path) }}"
+              "text": "Just published: https://www.aem.live${{ steps.format.outputs.replaced }}, Status: ${{ github.event.client_payload.status }}, ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com', steps.format.outputs.replaced) }}"
             }
   cdn-purge:
     runs-on: ubuntu-latest
