@@ -10,7 +10,7 @@ jobs:
     - run: |
         echo "Status: ${{ github.event.client_payload.status }}"
         echo "Payload: ${{ toJson(github.event.client_payload) }}"
-        echo "format('https://api.fastly.com/purge/{0}/{1}', {{ hmqa-dev.factory.alshayauat.com }}, {{ steps.format.outputs.replaced }})"
+        echo format('https://api.fastly.com/purge/{0}/{1}', hmqa-dev.factory.alshayauat.com,  steps.format.outputs.replaced)
   slack:
     runs-on: ubuntu-latest
     steps:
@@ -49,6 +49,6 @@ jobs:
     - name: Purge CDN
       uses: fjogeleit/http-request-action@v1
       with:
-        url: format('https://api.fastly.com/purge/{0}/{1}', {{ hmqa-dev.factory.alshayauat.com }}, {{ steps.format.outputs.replaced }})
+        url: format('https://api.fastly.com/purge/{0}/{1}', hmqa-dev.factory.alshayauat.com,  steps.format.outputs.replaced)
         method: 'POST'
         customHeaders: '{"Content-Type": "application/json", "Fastly-Key": "${{ secrets.FASTLY_API_KEY }}", "Accept": "application/json"}'
