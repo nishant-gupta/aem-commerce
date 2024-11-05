@@ -17,7 +17,7 @@ jobs:
       - run: |
         echo "Status: ${{ github.event.client_payload.status }}"
         echo "Payload: ${{ toJson(github.event.client_payload) }}"
-        echo ${{ format('https://api.fastly.com/purge/{0}{1}', 'hmqa-dev.factory.alshayauat.com',  github.event.client_payload.path) }}
+        echo "https://api.fastly.com/purge/hmqa-dev.factory.alshayauat.com${{ github.event.client_payload.path }}"
   slack:
     runs-on: ubuntu-latest
     steps:
