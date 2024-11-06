@@ -32,7 +32,7 @@ jobs:
           # For posting a rich message using Block Kit
           payload: |
             {
-              "text": "Just published: `${{ github.event.client_payload.path }} , ${{ vars.CDN_DOMAINS }}, ${{ vars.CDN_DOMAINS_ALL }}`"
+              "text": "Just published: `${{ github.event.client_payload.path }}`"
             }
       - name: Notify Slack (Markdown)
         if: ${{ endsWith(github.event.client_payload.path, '.md') }}
